@@ -3,360 +3,413 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Tea-ology Tea Myth vs. Fact Game</title>
+    <title>Perfect TEA-ology & Snack Combo Quiz</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Poppins', sans-serif; }
         
-        .card-flip {
-            perspective: 1000px;
+        .question-card {
+            transform: translateX(100%);
+            opacity: 0;
+            transition: all 0.5s ease-in-out;
         }
         
-        .card-inner {
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
+        .question-card.active {
+            transform: translateX(0);
+            opacity: 1;
         }
         
-        .card-flip.flipped .card-inner {
-            transform: rotateY(180deg);
+        .question-card.prev {
+            transform: translateX(-100%);
+            opacity: 0;
         }
         
-        .card-front, .card-back {
-            backface-visibility: hidden;
+        .option-btn {
+            transition: all 0.3s ease;
         }
         
-        .card-back {
-            transform: rotateY(180deg);
+        .option-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
         
-        .bounce-in {
-            animation: bounceIn 0.5s ease-out;
+        .result-card {
+            animation: fadeInUp 0.8s ease-out;
         }
         
-        @keyframes bounceIn {
-            0% { transform: scale(0.3); opacity: 0; }
-            50% { transform: scale(1.05); }
-            70% { transform: scale(0.9); }
-            100% { transform: scale(1); opacity: 1; }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
-        .slide-up {
-            animation: slideUp 0.3s ease-out;
+        .tea-icon {
+            animation: steam 2s ease-in-out infinite;
         }
         
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        @keyframes steam {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-3px); }
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-emerald-50 to-teal-100 min-h-screen">
-    <div class="container mx-auto px-4 py-8 max-w-4xl">
+<body class="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50">
+    <div class="container mx-auto px-4 py-8 max-w-2xl">
         <!-- Header -->
         <div class="text-center mb-8">
-            <h1 class="text-4xl md:text-5xl font-bold text-emerald-800 mb-4">🍵 The Tea-ology Tea Myth vs. Fact Quiz</h1>
-            <p class="text-lg text-emerald-600 mb-6">Test your tea knowledge! Can you separate the myths from the facts?</p>
-            
-            <!-- Score Display -->
-            <div class="flex justify-center items-center space-x-8 mb-6">
-                <div class="bg-white rounded-lg px-6 py-3 shadow-md">
-                    <div class="text-sm text-gray-600">Score</div>
-                    <div id="score" class="text-2xl font-bold text-emerald-700">0</div>
+            <div class="text-6xl mb-4 tea-icon">🫖</div>
+            <h1 class="text-4xl font-bold text-amber-800 mb-2">Perfect TEA-ology & Snack Combo</h1>
+            <p class="text-amber-600 text-lg">Discover your ideal pairing based on your mood, time, and cravings!</p>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="quiz-container" class="bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden">
+            <!-- Progress Bar -->
+            <div class="mb-8">
+                <div class="flex justify-between text-sm text-amber-600 mb-2">
+                    <span>Question <span id="current-question">1</span> of 4</span>
+                    <span><span id="progress-percent">25</span>%</span>
                 </div>
-                <div class="bg-white rounded-lg px-6 py-3 shadow-md">
-                    <div class="text-sm text-gray-600">Question</div>
-                    <div id="questionCounter" class="text-2xl font-bold text-emerald-700">1/10</div>
+                <div class="w-full bg-amber-100 rounded-full h-2">
+                    <div id="progress-bar" class="bg-gradient-to-r from-amber-400 to-orange-500 h-2 rounded-full transition-all duration-500" style="width: 25%"></div>
+                </div>
+            </div>
+
+            <!-- Question 1: Time of Day -->
+            <div class="question-card active" data-question="1">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6">🕐 What time of day is it?</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button class="option-btn bg-gradient-to-r from-yellow-400 to-orange-400 text-white p-4 rounded-xl font-medium" data-value="morning">
+                        ☀️ Morning (6-11 AM)
+                    </button>
+                    <button class="option-btn bg-gradient-to-r from-blue-400 to-cyan-400 text-white p-4 rounded-xl font-medium" data-value="afternoon">
+                        🌤️ Afternoon (12-5 PM)
+                    </button>
+                    <button class="option-btn bg-gradient-to-r from-orange-400 to-red-400 text-white p-4 rounded-xl font-medium" data-value="evening">
+                        🌅 Evening (6-9 PM)
+                    </button>
+                    <button class="option-btn bg-gradient-to-r from-purple-400 to-indigo-400 text-white p-4 rounded-xl font-medium" data-value="night">
+                        🌙 Night (10+ PM)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Question 2: Current Mood -->
+            <div class="question-card" data-question="2">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6">😊 How are you feeling right now?</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button class="option-btn bg-gradient-to-r from-green-400 to-emerald-400 text-white p-4 rounded-xl font-medium" data-value="energetic">
+                        ⚡ Energetic & Alert
+                    </button>
+                    <button class="option-btn bg-gradient-to-r from-blue-400 to-indigo-400 text-white p-4 rounded-xl font-medium" data-value="calm">
+                        🧘 Calm & Peaceful
+                    </button>
+                    <button class="option-btn bg-gradient-to-r from-pink-400 to-rose-400 text-white p-4 rounded-xl font-medium" data-value="cozy">
+                        🛋️ Cozy & Relaxed
+                    </button>
+                    <button class="option-btn bg-gradient-to-r from-amber-400 to-yellow-400 text-white p-4 rounded-xl font-medium" data-value="stressed">
+                        😤 Stressed & Need Comfort
+                    </button>
+                </div>
+            </div>
+
+            <!-- Question 3: Craving Type -->
+            <div class="question-card" data-question="3">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6">🍪 What are you craving?</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button class="option-btn bg-gradient-to-r from-red-400 to-pink-400 text-white p-4 rounded-xl font-medium" data-value="sweet">
+                        🍰 Something Sweet
+                    </button>
+                    <button class="option-btn bg-gradient-to-r from-orange-400 to-amber-400 text-white p-4 rounded-xl font-medium" data-value="savory">
+                        🧀 Something Savory
+                    </button>
+                    <button class="option-btn bg-gradient-to-r from-green-400 to-teal-400 text-white p-4 rounded-xl font-medium" data-value="healthy">
+                        🥗 Something Healthy
+                    </button>
+                    <button class="option-btn bg-gradient-to-r from-purple-400 to-violet-400 text-white p-4 rounded-xl font-medium" data-value="indulgent">
+                        🍫 Something Indulgent
+                    </button>
+                </div>
+            </div>
+
+            <!-- Question 4: Tea Preference -->
+            <div class="question-card" data-question="4">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6">🍵 What tea mood are you in?</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button class="option-btn bg-gradient-to-r from-amber-600 to-orange-600 text-white p-4 rounded-xl font-medium" data-value="bold">
+                        💪 Bold & Strong
+                    </button>
+                    <button class="option-btn bg-gradient-to-r from-green-500 to-emerald-500 text-white p-4 rounded-xl font-medium" data-value="fresh">
+                        🌿 Fresh & Light
+                    </button>
+                    <button class="option-btn bg-gradient-to-r from-red-500 to-rose-500 text-white p-4 rounded-xl font-medium" data-value="floral">
+                        🌸 Floral & Aromatic
+                    </button>
+                    <button class="option-btn bg-gradient-to-r from-yellow-500 to-amber-500 text-white p-4 rounded-xl font-medium" data-value="spiced">
+                        🌶️ Spiced & Warming
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- Game Container -->
-        <div id="gameContainer" class="max-w-2xl mx-auto">
-            <!-- Question Card -->
-            <div id="questionCard" class="card-flip mb-8">
-                <div class="card-inner relative">
-                    <!-- Front of card (question) -->
-                    <div class="card-front absolute inset-0">
-                        <div class="bg-white rounded-2xl shadow-xl p-8 border-2 border-emerald-200">
-                            <div class="text-center mb-6">
-                                <div class="text-6xl mb-4">🤔</div>
-                                <h2 class="text-xl font-semibold text-gray-800 mb-4">Is this a MYTH or FACT?</h2>
-                            </div>
-                            
-                            <div id="statementText" class="text-lg text-gray-700 text-center mb-8 leading-relaxed">
-                                Green tea contains more caffeine than black tea.
-                            </div>
-                            
-                            <div class="flex space-x-4 justify-center">
-                                <button id="mythBtn" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-4 px-8 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-200">
-                                    🚫 MYTH
-                                </button>
-                                <button id="factBtn" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-4 px-8 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-200">
-                                    ✅ FACT
-                                </button>
-                            </div>
-                        </div>
+        <!-- Results Container -->
+        <div id="results-container" class="hidden">
+            <div class="result-card bg-white rounded-2xl shadow-xl p-8">
+                <div class="text-center mb-6">
+                    <div class="text-6xl mb-4" id="result-emoji">🫖</div>
+                    <h2 class="text-3xl font-bold text-amber-800 mb-2">Your Perfect Combo!</h2>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <!-- Tea Result -->
+                    <div class="bg-gradient-to-br from-amber-50 to-orange-50 p-6 rounded-xl">
+                        <h3 class="text-xl font-semibold text-amber-800 mb-3 flex items-center">
+                            🍵 Your Tea
+                        </h3>
+                        <h4 class="text-lg font-medium text-gray-800 mb-2" id="tea-name"></h4>
+                        <p class="text-gray-600 text-sm" id="tea-description"></p>
                     </div>
                     
-                    <!-- Back of card (answer) -->
-                    <div class="card-back absolute inset-0">
-                        <div class="bg-white rounded-2xl shadow-xl p-8 border-2 border-emerald-200">
-                            <div class="text-center">
-                                <div id="resultEmoji" class="text-6xl mb-4">✅</div>
-                                <div id="resultText" class="text-2xl font-bold mb-4 text-green-600">Correct!</div>
-                                <div id="explanationText" class="text-gray-700 mb-6 leading-relaxed">
-                                    This is actually a myth! Black tea typically contains more caffeine than green tea.
-                                </div>
-                                <button id="nextBtn" class="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-200">
-                                    Next Question →
-                                </button>
-                            </div>
-                        </div>
+                    <!-- Snack Result -->
+                    <div class="bg-gradient-to-br from-rose-50 to-pink-50 p-6 rounded-xl">
+                        <h3 class="text-xl font-semibold text-rose-800 mb-3 flex items-center">
+                            🍪 Your Snack
+                        </h3>
+                        <h4 class="text-lg font-medium text-gray-800 mb-2" id="snack-name"></h4>
+                        <p class="text-gray-600 text-sm" id="snack-description"></p>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Final Results -->
-        <div id="resultsContainer" class="max-w-2xl mx-auto hidden">
-            <div class="bg-white rounded-2xl shadow-xl p-8 border-2 border-emerald-200 text-center">
-                <div class="text-6xl mb-4">🏆</div>
-                <h2 class="text-3xl font-bold text-emerald-800 mb-4">Game Complete!</h2>
-                <div id="finalScore" class="text-xl text-gray-700 mb-6">You scored 0 out of 10!</div>
-                <div id="scoreMessage" class="text-lg text-gray-600 mb-8">Tea Master! You know your tea facts!</div>
                 
-                <!-- Follow Me Section -->
-                <div class="border-t border-gray-200 pt-6 mb-6">
-                    <h3 class="text-xl font-semibold text-emerald-800 mb-4">Follow me for more interesting facts! 🌟</h3>
-                    <div class="flex justify-center items-center space-x-4 flex-wrap gap-2">
-                        <!-- Instagram -->
-                        <a href="https://www.instagram.com/theteaologyboutique" target="_blank" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white p-3 rounded-full shadow-lg transform hover:scale-110 transition-all duration-200">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <!-- Why This Combo -->
+                <div class="bg-gradient-to-r from-purple-50 to-indigo-50 p-6 rounded-xl mb-6">
+                    <h3 class="text-lg font-semibold text-purple-800 mb-3">✨ Why This Combo Works</h3>
+                    <p class="text-gray-700" id="combo-reason"></p>
+                </div>
+                
+                <!-- Social Media Sharing -->
+                <div class="bg-gradient-to-r from-gray-50 to-slate-50 p-6 rounded-xl mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 text-center">Share Your Perfect Combo! ✨</h3>
+                    <div class="flex justify-center space-x-4">
+                        <a href="https://www.instagram.com/" target="_blank" class="bg-gradient-to-r from-pink-500 to-rose-500 text-white p-3 rounded-full hover:from-pink-600 hover:to-rose-600 transition-all duration-300 transform hover:scale-110 shadow-lg">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
                             </svg>
                         </a>
-                        
-                        <!-- TikTok -->
-                        <a href="http://tiktok.com/@teaology_" target="_blank" class="bg-black hover:bg-gray-800 text-white p-3 rounded-full shadow-lg transform hover:scale-110 transition-all duration-200">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                        <a href="https://www.tiktok.com/" target="_blank" class="bg-gradient-to-r from-gray-800 to-black text-white p-3 rounded-full hover:from-gray-900 hover:to-gray-800 transition-all duration-300 transform hover:scale-110 shadow-lg">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
                             </svg>
                         </a>
-                        
-                        <!-- Facebook -->
-                        <a href="https://www.facebook.com/profile.php?id=61579978653142" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transform hover:scale-110 transition-all duration-200">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                        <a href="https://www.facebook.com/" target="_blank" class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-3 rounded-full hover:from-blue-700 hover:to-blue-800 transition-all duration-300 transform hover:scale-110 shadow-lg">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                             </svg>
                         </a>
-                        
-                        <!-- Pinterest -->
-                        <a href="https://uk.pinterest.com/helloteaology" target="_blank" class="bg-red-600 hover:bg-red-700 text-white p-3 rounded-full shadow-lg transform hover:scale-110 transition-all duration-200">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                        <a href="https://www.pinterest.com/" target="_blank" class="bg-gradient-to-r from-red-600 to-red-700 text-white p-3 rounded-full hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-110 shadow-lg">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24.009 12.017 24c6.624 0 11.99-5.367 11.99-12.013C24.007 5.367 18.641.001 12.017.001z"/>
                             </svg>
                         </a>
-                        
-                        <!-- Etsy -->
-                        <a href="hhttp://theteaologyboutique.etsy.com" target="_blank" class="bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-full shadow-lg transform hover:scale-110 transition-all duration-200">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M9.16 12.24c0-1.12.96-2.04 2.08-2.04.64 0 1.2.24 1.6.64l1.12-1.12c-.72-.72-1.68-1.12-2.72-1.12-2.16 0-3.92 1.76-3.92 3.92s1.76 3.92 3.92 3.92c1.04 0 2-.4 2.72-1.12l-1.12-1.12c-.4.4-.96.64-1.6.64-1.12 0-2.08-.92-2.08-2.04zm7.36-7.36h-8.8c-1.76 0-3.2 1.44-3.2 3.2v8.8c0 1.76 1.44 3.2 3.2 3.2h8.8c1.76 0 3.2-1.44 3.2-3.2v-8.8c0-1.76-1.44-3.2-3.2-3.2zm1.6 12c0 .88-.72 1.6-1.6 1.6h-8.8c-.88 0-1.6-.72-1.6-1.6v-8.8c0-.88.72-1.6 1.6-1.6h8.8c.88 0 1.6.72 1.6 1.6v8.8z"/>
+                        <a href="https://www.etsy.com/" target="_blank" class="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-3 rounded-full hover:from-orange-600 hover:to-orange-700 transition-all duration-300 transform hover:scale-110 shadow-lg">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9.16 12.24c0-1.12.96-2.04 2.08-2.04.64 0 1.2.24 1.6.64l1.12-1.12c-.72-.72-1.68-1.12-2.72-1.12-2.16 0-3.92 1.76-3.92 3.92s1.76 3.92 3.92 3.92c1.04 0 2-.4 2.72-1.12l-1.12-1.12c-.4.4-.96.64-1.6.64-1.12 0-2.08-.92-2.08-2.04zm14.84-.24c0 6.627-5.373 12-12 12s-12-5.373-12-12 5.373-12 12-12 12 5.373 12 12zm-5.6-4.8h-4.8v1.6h1.6v6.4h1.6v-6.4h1.6v-1.6z"/>
                             </svg>
                         </a>
                     </div>
                 </div>
                 
-                <button id="playAgainBtn" class="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-200">
-                    🔄 Play Again
-                </button>
+                <div class="text-center">
+                    <button id="restart-btn" class="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-8 py-3 rounded-xl font-medium hover:from-amber-600 hover:to-orange-600 transition-all duration-300 transform hover:scale-105">
+                        Take Quiz Again 🔄
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        const teaQuestions = [
+        let currentQuestion = 1;
+        let answers = {};
+        
+        const teaCombos = {
+            // Morning combinations
+            'morning-energetic-sweet-bold': {
+                tea: 'English Breakfast Tea',
+                teaDesc: 'A robust black tea blend with bold flavor and energizing caffeine.',
+                snack: 'Buttered Scones with Jam',
+                snackDesc: 'Classic British teatime treat with sweet jam and rich butter.',
+                reason: 'This classic combo gives you the energy boost you need while satisfying your sweet tooth. The strong tea cuts through the rich scone beautifully.',
+                emoji: '☕'
+            },
+            'morning-calm-healthy-fresh': {
+                tea: 'Green Tea with Jasmine',
+                teaDesc: 'Light, refreshing green tea with delicate floral notes for a peaceful moment.',
+                snack: 'Greek Yogurt with Honey & Berries',
+                snackDesc: 'Protein-rich yogurt topped with natural sweetness and antioxidant-packed berries.',
+                reason: 'A gentle, healthy combination that won\'t overwhelm your palate. The light tea pairs perfectly with the creamy yogurt for sustained energy.',
+                emoji: '🌸'
+            },
+            'afternoon-cozy-indulgent-spiced': {
+                tea: 'Chai Latte',
+                teaDesc: 'Warming spiced tea with cinnamon, cardamom, and ginger - creamy and comforting.',
+                snack: 'Dark Chocolate Biscotti',
+                snackDesc: 'Crunchy Italian cookies with rich dark chocolate, perfect for dipping.',
+                reason: 'The warm spices in chai complement the bitter-sweet chocolate perfectly. This indulgent combo feels like a cozy embrace.',
+                emoji: '🍫'
+            },
+            'evening-stressed-sweet-floral': {
+                tea: 'Chamomile Lavender Tea',
+                teaDesc: 'Caffeine-free herbal blend known for its calming and stress-relieving properties.',
+                snack: 'Honey Madeleines',
+                snackDesc: 'Delicate French sponge cakes with a subtle honey sweetness and shell-like shape.',
+                reason: 'This combination is designed to melt away stress. The floral tea soothes your nerves while the gentle sweetness provides comfort.',
+                emoji: '🌙'
+            },
+            'night-calm-healthy-fresh': {
+                tea: 'Peppermint Tea',
+                teaDesc: 'Refreshing herbal tea that aids digestion and promotes relaxation without caffeine.',
+                snack: 'Apple Slices with Almond Butter',
+                snackDesc: 'Crisp apple slices paired with protein-rich almond butter for a satisfying, healthy bite.',
+                reason: 'Perfect for when you want something healthy and refreshing. The mint aids digestion while the apple provides natural sweetness without being too heavy.',
+                emoji: '🍃'
+            }
+        };
+        
+        // Default fallback combos for unmatched combinations
+        const fallbackCombos = [
             {
-                statement: "Green tea contains more caffeine than black tea.",
-                answer: "myth",
-                explanation: "This is actually a myth! Black tea typically contains 40-70mg of caffeine per cup, while green tea contains 25-50mg per cup."
+                tea: 'Earl Grey Tea',
+                teaDesc: 'Classic black tea with bergamot oil - sophisticated and aromatic.',
+                snack: 'Shortbread Cookies',
+                snackDesc: 'Buttery Scottish cookies with a perfect crumbly texture.',
+                reason: 'A timeless combination that never goes out of style. The citrusy bergamot complements the rich, buttery cookies perfectly.',
+                emoji: '🫖'
             },
             {
-                statement: "Tea is the second most consumed beverage in the world after water.",
-                answer: "fact",
-                explanation: "This is a fact! Tea is indeed the second most consumed beverage globally, enjoyed by billions of people daily."
-            },
-            {
-                statement: "All true teas come from the same plant species.",
-                answer: "fact",
-                explanation: "This is a fact! All true teas (black, green, white, oolong) come from the Camellia sinensis plant. The difference is in processing."
-            },
-            {
-                statement: "Herbal teas are technically considered 'true teas'.",
-                answer: "myth",
-                explanation: "This is a myth! Herbal teas are actually tisanes or infusions. True teas only come from the Camellia sinensis plant."
-            },
-            {
-                statement: "Tea bags were invented by accident.",
-                answer: "fact",
-                explanation: "This is a fact! In 1908, Thomas Sullivan sent tea samples in silk pouches, and customers mistakenly brewed the entire pouch!"
-            },
-            {
-                statement: "White tea is always caffeine-free.",
-                answer: "myth",
-                explanation: "This is a myth! White tea does contain caffeine, though typically less than black or green tea (15-30mg per cup)."
-            },
-            {
-                statement: "Iced tea was invented in America.",
-                answer: "fact",
-                explanation: "This is a fact! Iced tea was popularized at the 1904 World's Fair in St. Louis when hot tea wasn't selling well in the summer heat."
-            },
-            {
-                statement: "Adding milk to tea completely blocks antioxidant absorption.",
-                answer: "myth",
-                explanation: "This is a myth! While milk may reduce some antioxidant activity, it doesn't completely block it. You still get health benefits."
-            },
-            {
-                statement: "Earl Grey tea is flavored with bergamot oil.",
-                answer: "fact",
-                explanation: "This is a fact! Earl Grey gets its distinctive citrusy flavor from bergamot oil, extracted from the bergamot orange."
-            },
-            {
-                statement: "Tea leaves can only be harvested once per year.",
-                answer: "myth",
-                explanation: "This is a myth! Tea can be harvested multiple times per year, with some regions having 3-4 harvest seasons annually."
+                tea: 'Oolong Tea',
+                teaDesc: 'Semi-fermented tea with complex flavors between green and black tea.',
+                snack: 'Mixed Nuts & Dried Fruit',
+                snackDesc: 'A healthy mix of almonds, walnuts, and naturally sweet dried fruits.',
+                reason: 'The complex flavors of oolong pair beautifully with the varied textures and tastes of this healthy snack mix.',
+                emoji: '🥜'
             }
         ];
 
-        let currentQuestion = 0;
-        let score = 0;
-        let gameQuestions = [];
-
-        function shuffleArray(array) {
-            const shuffled = [...array];
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-            }
-            return shuffled;
+        function updateProgress() {
+            const percent = (currentQuestion / 4) * 100;
+            document.getElementById('current-question').textContent = currentQuestion;
+            document.getElementById('progress-percent').textContent = percent;
+            document.getElementById('progress-bar').style.width = percent + '%';
         }
 
-        function initGame() {
-            gameQuestions = shuffleArray(teaQuestions);
-            currentQuestion = 0;
-            score = 0;
-            updateDisplay();
-            showQuestion();
-            document.getElementById('gameContainer').classList.remove('hidden');
-            document.getElementById('resultsContainer').classList.add('hidden');
+        function showQuestion(questionNum) {
+            document.querySelectorAll('.question-card').forEach(card => {
+                card.classList.remove('active', 'prev');
+                const cardNum = parseInt(card.dataset.question);
+                if (cardNum === questionNum) {
+                    card.classList.add('active');
+                } else if (cardNum < questionNum) {
+                    card.classList.add('prev');
+                }
+            });
         }
 
-        function updateDisplay() {
-            document.getElementById('score').textContent = score;
-            document.getElementById('questionCounter').textContent = `${currentQuestion + 1}/${gameQuestions.length}`;
+        function getComboKey() {
+            return `${answers.time}-${answers.mood}-${answers.craving}-${answers.tea}`;
         }
 
-        function showQuestion() {
-            const question = gameQuestions[currentQuestion];
-            document.getElementById('statementText').textContent = question.statement;
+        function getResult() {
+            const key = getComboKey();
             
-            // Reset card to front
-            document.getElementById('questionCard').classList.remove('flipped');
-            
-            // Enable buttons
-            document.getElementById('mythBtn').disabled = false;
-            document.getElementById('factBtn').disabled = false;
-            document.getElementById('mythBtn').classList.remove('opacity-50');
-            document.getElementById('factBtn').classList.remove('opacity-50');
-        }
-
-        function handleAnswer(userAnswer) {
-            const question = gameQuestions[currentQuestion];
-            const isCorrect = userAnswer === question.answer;
-            
-            if (isCorrect) {
-                score++;
-                updateDisplay();
+            // Try to find exact match
+            if (teaCombos[key]) {
+                return teaCombos[key];
             }
             
-            // Disable buttons
-            document.getElementById('mythBtn').disabled = true;
-            document.getElementById('factBtn').disabled = true;
-            document.getElementById('mythBtn').classList.add('opacity-50');
-            document.getElementById('factBtn').classList.add('opacity-50');
-            
-            // Show result
-            showResult(isCorrect, question.explanation);
-        }
-
-        function showResult(isCorrect, explanation) {
-            // Update result display
-            const resultEmoji = document.getElementById('resultEmoji');
-            const resultText = document.getElementById('resultText');
-            
-            if (isCorrect) {
-                resultEmoji.textContent = '🎉';
-                resultText.textContent = 'Correct!';
-                resultText.className = 'text-2xl font-bold mb-4 text-green-600';
-            } else {
-                resultEmoji.textContent = '😅';
-                resultText.textContent = 'Not quite!';
-                resultText.className = 'text-2xl font-bold mb-4 text-red-600';
+            // Try partial matches
+            for (let comboKey in teaCombos) {
+                const keyParts = key.split('-');
+                const comboParts = comboKey.split('-');
+                let matches = 0;
+                
+                for (let i = 0; i < keyParts.length; i++) {
+                    if (keyParts[i] === comboParts[i]) matches++;
+                }
+                
+                if (matches >= 2) {
+                    return teaCombos[comboKey];
+                }
             }
             
-            document.getElementById('explanationText').textContent = explanation;
-            
-            // Flip card to show result
-            setTimeout(() => {
-                document.getElementById('questionCard').classList.add('flipped');
-            }, 500);
+            // Return random fallback
+            return fallbackCombos[Math.floor(Math.random() * fallbackCombos.length)];
         }
 
-        function nextQuestion() {
-            currentQuestion++;
+        function showResults() {
+            const result = getResult();
             
-            if (currentQuestion >= gameQuestions.length) {
-                showFinalResults();
-            } else {
-                updateDisplay();
-                showQuestion();
-            }
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('results-container').classList.remove('hidden');
+            
+            document.getElementById('result-emoji').textContent = result.emoji;
+            document.getElementById('tea-name').textContent = result.tea;
+            document.getElementById('tea-description').textContent = result.teaDesc;
+            document.getElementById('snack-name').textContent = result.snack;
+            document.getElementById('snack-description').textContent = result.snackDesc;
+            document.getElementById('combo-reason').textContent = result.reason;
         }
 
-        function showFinalResults() {
-            document.getElementById('gameContainer').classList.add('hidden');
-            document.getElementById('resultsContainer').classList.remove('hidden');
-            document.getElementById('resultsContainer').classList.add('bounce-in');
-            
-            const finalScore = document.getElementById('finalScore');
-            const scoreMessage = document.getElementById('scoreMessage');
-            
-            finalScore.textContent = `You scored ${score} out of ${gameQuestions.length}!`;
-            
-            let message = '';
-            const percentage = (score / gameQuestions.length) * 100;
-            
-            if (percentage >= 90) {
-                message = '🏆 Tea Master! You know your tea facts perfectly!';
-            } else if (percentage >= 70) {
-                message = '🌟 Tea Expert! You have excellent tea knowledge!';
-            } else if (percentage >= 50) {
-                message = '☕ Tea Enthusiast! Not bad, keep learning!';
-            } else {
-                message = '🌱 Tea Beginner! Time to brew up some more knowledge!';
-            }
-            
-            scoreMessage.textContent = message;
+        function resetQuiz() {
+            currentQuestion = 1;
+            answers = {};
+            updateProgress();
+            showQuestion(1);
+            document.getElementById('quiz-container').style.display = 'block';
+            document.getElementById('results-container').classList.add('hidden');
         }
 
         // Event listeners
-        document.getElementById('mythBtn').addEventListener('click', () => handleAnswer('myth'));
-        document.getElementById('factBtn').addEventListener('click', () => handleAnswer('fact'));
-        document.getElementById('nextBtn').addEventListener('click', nextQuestion);
-        document.getElementById('playAgainBtn').addEventListener('click', initGame);
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('option-btn')) {
+                const value = e.target.dataset.value;
+                
+                // Store answer based on current question
+                switch(currentQuestion) {
+                    case 1: answers.time = value; break;
+                    case 2: answers.mood = value; break;
+                    case 3: answers.craving = value; break;
+                    case 4: answers.tea = value; break;
+                }
+                
+                // Add selection effect
+                e.target.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    e.target.style.transform = '';
+                }, 150);
+                
+                // Move to next question or show results
+                setTimeout(() => {
+                    if (currentQuestion < 4) {
+                        currentQuestion++;
+                        updateProgress();
+                        showQuestion(currentQuestion);
+                    } else {
+                        showResults();
+                    }
+                }, 300);
+            }
+        });
 
-        // Initialize game
-        initGame();
+        document.getElementById('restart-btn').addEventListener('click', resetQuiz);
+
+        // Initialize
+        updateProgress();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'978028f603acfbf4',t:'MTc1NjY4MTM5My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97806b8e72cceefd',t:'MTc1NjY4NDEyMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
